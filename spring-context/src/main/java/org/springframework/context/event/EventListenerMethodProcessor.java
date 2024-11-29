@@ -142,6 +142,7 @@ public class EventListenerMethodProcessor
 						}
 					}
 					try {
+						// 扫描方法上的bean
 						processBean(beanName, type);
 					}
 					catch (Throwable ex) {

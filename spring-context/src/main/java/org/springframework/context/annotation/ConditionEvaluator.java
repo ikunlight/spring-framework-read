@@ -164,6 +164,7 @@ class ConditionEvaluator {
 			this.beanFactory = deduceBeanFactory(registry);
 			this.environment = (environment != null ? environment : deduceEnvironment(registry));
 			this.resourceLoader = (resourceLoader != null ? resourceLoader : deduceResourceLoader(registry));
+			// Thread.currentThread().getContextClassLoader();
 			this.classLoader = deduceClassLoader(resourceLoader, this.beanFactory);
 		}
 

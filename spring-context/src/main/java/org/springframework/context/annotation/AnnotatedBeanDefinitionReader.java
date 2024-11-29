@@ -85,7 +85,10 @@ public class AnnotatedBeanDefinitionReader {
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
 		Assert.notNull(environment, "Environment must not be null");
 		this.registry = registry;
+		// 通过解析 @Conditional 注解来决定是否将某个组件或配置类注册到 Spring 容器中
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
+		// 添加一些bean后置处理器，处理各个注解的处理器，全部放到beanFactory的 beanDefinitionMap
+		// 这些添加的bean后置处理器，将来在 refresh() 中将会被使用
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 	}
 
@@ -257,10 +260,14 @@ public class AnnotatedBeanDefinitionReader {
 
 		abd.setAttribute(ConfigurationClassUtils.CANDIDATE_ATTRIBUTE, Boolean.TRUE);
 		abd.setInstanceSupplier(supplier);
+		// 用来获取配置类上面的@Scope值
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
+		// 如果没有@Scope则设置默认值singleton
 		abd.setScope(scopeMetadata.getScopeName());
+		// 设置bean的名称，第一个字母小写的
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 
+		// 执行Bean上面的注解
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
 		if (qualifiers != null) {
 			for (Class<? extends Annotation> qualifier : qualifiers) {
@@ -293,6 +300,7 @@ public class AnnotatedBeanDefinitionReader {
 	/**
 	 * Get the Environment from the given registry if possible, otherwise return a new
 	 * StandardEnvironment.
+	 * 最终调用的是 System.getProperties() 和 System.getenv() 获取系统环境变量
 	 */
 	private static Environment getOrCreateEnvironment(BeanDefinitionRegistry registry) {
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");

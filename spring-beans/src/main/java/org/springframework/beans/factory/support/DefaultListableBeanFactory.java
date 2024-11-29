@@ -1175,6 +1175,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 			if (hasBeanCreationStarted()) {
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
+				// 在注册自己的bean的时候会进到这里
 				synchronized (this.beanDefinitionMap) {
 					this.beanDefinitionMap.put(beanName, beanDefinition);
 					List<String> updatedDefinitions = new ArrayList<>(this.beanDefinitionNames.size() + 1);
@@ -1185,6 +1186,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 			else {
+				// 框架的bean会进到这里
 				// Still in startup registration phase
 				this.beanDefinitionMap.put(beanName, beanDefinition);
 				this.beanDefinitionNames.add(beanName);
@@ -1396,6 +1398,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 	/**
 	 * Remove any assumptions about by-type mappings.
+	 * allBeanNamesByType 和 singletonBeanNamesByType 主要的作用：
+	 * spring可以通过byName和byType查找，
+	 * byName查找不需要用到这两个，那么这两个都是空的
+	 * byType查找需要用到这两个，那么这两个不为空，直接从这里的缓存取出
 	 */
 	private void clearByTypeCache() {
 		this.allBeanNamesByType.clear();

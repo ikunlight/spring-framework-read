@@ -441,6 +441,7 @@ abstract class AnnotationsScanner {
 
 	static Annotation[] getDeclaredAnnotations(AnnotatedElement source, boolean defensive) {
 		boolean cached = false;
+		// 获取的是 ComponentScan返回的Annotation[]
 		Annotation[] annotations = declaredAnnotationCache.get(source);
 		if (annotations != null) {
 			cached = true;
@@ -512,6 +513,7 @@ abstract class AnnotationsScanner {
 			return true;
 		}
 		if (source instanceof Class<?> sourceClass) {
+			// 没有继承任何自定义类（仅继承自 Object）和 没有实现任何接口
 			boolean noSuperTypes = (sourceClass.getSuperclass() == Object.class &&
 					sourceClass.getInterfaces().length == 0);
 			return (searchEnclosingClass.test(sourceClass) ? noSuperTypes &&

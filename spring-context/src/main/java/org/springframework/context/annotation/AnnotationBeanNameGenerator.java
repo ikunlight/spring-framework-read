@@ -249,9 +249,12 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	 * @return the default bean name (never {@code null})
 	 */
 	protected String buildDefaultBeanName(BeanDefinition definition) {
+		// beanClassName 是类限定名
 		String beanClassName = definition.getBeanClassName();
 		Assert.state(beanClassName != null, "No bean class name set");
+		// 获取到类型第一个字母大写的
 		String shortClassName = ClassUtils.getShortName(beanClassName);
+		// 把第一个字母大写的转为小写的
 		return StringUtils.uncapitalizeAsProperty(shortClassName);
 	}
 
